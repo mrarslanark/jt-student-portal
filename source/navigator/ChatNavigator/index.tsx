@@ -1,10 +1,26 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 
 import Chats from '../../screens/Chat';
 import ChatDetail from '../../screens/ChatDetail';
 
-const ChatStackNavigator = createNativeStackNavigator();
+type ParamList = {
+  Chats: {} | undefined;
+  ChatDetail: {
+    studentId: string;
+    name: string;
+    avatar: string;
+  };
+};
+
+export type ChatsProps = NativeStackScreenProps<ParamList, 'Chats'>;
+export type ChatDetailProps = NativeStackScreenProps<ParamList, 'ChatDetail'>;
+
+const ChatStackNavigator = createNativeStackNavigator<ParamList>();
+
 const ChatNavigator = () => {
   return (
     <ChatStackNavigator.Navigator>

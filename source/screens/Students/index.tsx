@@ -5,18 +5,22 @@ import Divider from '../../components/Divider';
 import StudentItem, {StudentItemType} from '../../components/StudentItem';
 import {Icons} from '../../constants/icons';
 import students from '../../constants/students.json';
+import {StudentsProps} from '../../navigator/StudentNavigator';
 import styles from './styles';
 
-const Students = () => {
-  const [masterDataSource, setMasterDataSource] =
-    useState<StudentItemType[]>(students);
+const Students: React.FC<StudentsProps> = ({navigation}) => {
+  const [dataSource, setDataSource] = useState<StudentItemType[]>(students);
   const [filteredDataSource, setFilteredDataSource] =
     useState<StudentItemType[]>(students);
   const [searchText, setSearchText] = useState('');
 
+  const handleNavigation = (id: string) => {
+    navigation.navigate('StudentDetail', {id});
+  };
+
   const searchFilter = (text: string) => {
     if (text) {
-      const newData = masterDataSource.filter(item => {
+      const newData = dataSource.filter(item => {
         const {first_name, last_name, class_id, roll_no} = item;
         const firstName = first_name
           ? first_name.toLowerCase()
@@ -35,7 +39,7 @@ const Students = () => {
       setFilteredDataSource(newData);
       setSearchText(text);
     } else {
-      setFilteredDataSource(masterDataSource);
+      setFilteredDataSource(dataSource);
       setSearchText(text);
     }
   };
@@ -60,7 +64,9 @@ const Students = () => {
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Divider}
         renderItem={({item}) => {
-          return <StudentItem {...item} />;
+          return (
+            <StudentItem onPress={() => handleNavigation(item.id)} {...item} />
+          );
         }}
       />
     </View>

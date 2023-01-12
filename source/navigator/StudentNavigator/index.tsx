@@ -1,8 +1,30 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import StudentDetail from '../../screens/StudentDetail';
 import Students from '../../screens/Students';
 
-const StudentStackNavigator = createNativeStackNavigator();
+type ParamList = {
+  Students: {} | undefined;
+  StudentDetail: {
+    id: string;
+  };
+  ChatDetail: {
+    studentId: string;
+    name: string;
+    avatar: string;
+  };
+};
+
+export type StudentsProps = NativeStackScreenProps<ParamList, 'Students'>;
+export type StudentDetailProps = NativeStackScreenProps<
+  ParamList,
+  'StudentDetail'
+>;
+
+const StudentStackNavigator = createNativeStackNavigator<ParamList>();
+
 const StudentNavigator = () => {
   return (
     <StudentStackNavigator.Navigator>
