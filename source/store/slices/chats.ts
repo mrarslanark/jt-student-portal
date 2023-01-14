@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {GiftedChat} from 'react-native-gifted-chat';
 
-type RoomMessage = {
+export type RoomMessage = {
   _id: string;
   text: string;
   createdAt: Date;
@@ -33,7 +33,7 @@ export type MessageUpdateType = {
 };
 
 type ChatState = {
-  rooms: RoomType[];
+  rooms: RoomType[] | any[];
   activeRoom: RoomType | undefined;
 };
 

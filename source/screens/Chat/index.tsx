@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -10,13 +10,31 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import Divider from '../../components/Divider';
+import SearchBar from '../../components/SearchBar';
 import {ChatsProps} from '../../navigator/ChatNavigator';
 import {AppDispatch, RootState} from '../../store';
+import styles from './styles';
 import {setActiveRoom} from '../../store/slices/chats';
 
 const Chats: React.FC<ChatsProps> = ({navigation}) => {
   const dispatch = useDispatch<AppDispatch>();
   const rooms = useSelector((state: RootState) => state.root.chats.rooms);
+  const [chatRooms, setChatRooms] = useState(rooms);
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const newData = rooms.filter(item => {
+        const {user} = item;
+        const name = user.name ? user.name.toLowerCase() : ''.toLowerCase();
+        const inputText = searchText.toLowerCase();
+        return name.indexOf(inputText) > -1;
+      });
+      setChatRooms(newData);
+    } else {
+      setChatRooms(rooms);
+    }
+  }, [searchText, rooms]);
 
   const handleNavigation = (item: any) => {
     dispatch(setActiveRoom(item.user.id));
@@ -27,12 +45,19 @@ const Chats: React.FC<ChatsProps> = ({navigation}) => {
     });
   };
 
-  const sorted = rooms
+  const sorted = chatRooms
     .slice()
     .sort((a, b) => (b.updatedAt > a.updatedAt ? 1 : -1));
 
   return (
     <View style={styles.container}>
+      {rooms.length > 0 ? (
+        <SearchBar
+          onChangeText={setSearchText}
+          placeholder={'Search Students'}
+          value={searchText}
+        />
+      ) : null}
       <FlatList
         data={sorted}
         ItemSeparatorComponent={Divider}
@@ -59,47 +84,5 @@ const Chats: React.FC<ChatsProps> = ({navigation}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    padding: 16,
-    backgroundColor: 'white',
-  },
-  textContainer: {
-    flex: 1,
-  },
-  topTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'white',
-    resizeMode: 'contain',
-    borderRadius: 100,
-    marginRight: 12,
-  },
-  name: {
-    fontSize: 16,
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  lastMessage: {
-    fontSize: 12,
-    color: 'black',
-    fontWeight: 'normal',
-  },
-  timestamp: {
-    fontSize: 12,
-    color: 'gray',
-    fontWeight: 'normal',
-    fontStyle: 'italic',
-  },
-});
 
 export default Chats;

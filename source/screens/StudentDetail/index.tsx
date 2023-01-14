@@ -1,22 +1,24 @@
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
+  Alert,
   Image,
   ScrollView,
+  Text,
   TouchableOpacity,
-  Alert,
+  View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 
-import {StudentDetailProps} from '../../navigator/StudentNavigator';
-import students from '../../constants/students.json';
-import {StudentItemType} from '../../components/StudentItem';
-import Divider from '../../components/Divider';
 import moment from 'moment';
 import {useDispatch} from 'react-redux';
+import Button from '../../components/Button';
+import Divider from '../../components/Divider';
+import InfoRow from '../../components/InfoRow';
+import {StudentItemType} from '../../components/StudentItem';
+import students from '../../constants/students.json';
+import {StudentDetailProps} from '../../navigator/StudentNavigator';
 import {AppDispatch} from '../../store';
 import {setActiveRoom} from '../../store/slices/chats';
+import styles from './styles';
 
 const StudentDetail: React.FC<StudentDetailProps> = ({navigation, route}) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,129 +106,5 @@ const StudentDetail: React.FC<StudentDetailProps> = ({navigation, route}) => {
     </ScrollView>
   );
 };
-
-interface ButtonType {
-  title: string;
-  onPress: () => void | undefined;
-}
-
-const Button: React.FC<ButtonType> = ({onPress, title}) => {
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.actionContainer}>
-      <Text style={styles.actionText}>{title}</Text>
-    </TouchableOpacity>
-  );
-};
-
-type InfoRowType = {
-  title: string;
-  value: string;
-};
-
-const InfoRow: React.FC<InfoRowType> = ({title, value}) => {
-  return (
-    <View>
-      <View style={styles.infoRowContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.value}>{value}</Text>
-      </View>
-      <Divider marginVertical={8} />
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  infoRowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  header: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 100,
-    resizeMode: 'contain',
-    backgroundColor: 'white',
-  },
-  name: {
-    fontSize: 24,
-    color: 'black',
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginTop: 12,
-  },
-  title: {
-    fontSize: 16,
-    color: 'black',
-    fontWeight: 'bold',
-    flex: 1,
-  },
-  value: {
-    flex: 1,
-    textAlign: 'right',
-    fontSize: 16,
-    color: 'black',
-  },
-  sectionTitle: {
-    marginBottom: 16,
-    fontSize: 24,
-    opacity: 0.6,
-    fontWeight: 'bold',
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  statusButton: {
-    borderBottomColor: '#13315C',
-    borderBottomWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    flex: 0.48,
-  },
-  statusTextEnabled: {
-    color: 'green',
-    fontSize: 14,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  statusTextDisabled: {
-    color: 'gray',
-    fontSize: 14,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  actionContainer: {
-    backgroundColor: '#134074',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    flex: 0.48,
-  },
-  actionText: {
-    color: '#EEF4ED',
-    fontSize: 14,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-});
 
 export default StudentDetail;

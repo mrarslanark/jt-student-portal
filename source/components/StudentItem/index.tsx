@@ -23,9 +23,7 @@ const StudentItem: React.FC<StudentItemType> = props => {
       onPress={props.onPress}>
       <Image source={{uri: props.avatar}} style={styles.avatar} />
       <View style={styles.textContainer}>
-        <Text style={styles.name}>
-          {props.first_name} {props.last_name}
-        </Text>
+        <Text style={styles.name}>{props.last_name}</Text>
         <Text style={styles.classId}>
           {props.class_id} | {props.roll_no}
         </Text>
