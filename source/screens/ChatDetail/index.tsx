@@ -8,6 +8,7 @@ import {
   addRoom,
   removeActiveRoom,
   RoomType,
+  setActiveRoom,
   updateMessages,
 } from '../../store/slices/chats';
 import {Icons} from '../../constants/icons';
@@ -42,36 +43,40 @@ const ChatDetail: React.FC<ChatDetailProps> = ({navigation, route}) => {
     });
   }, []);
 
-  const onSend = useCallback((messages: any = []) => {
-    const roomId = `${studentId}**admin`;
-    const user = {
-      id: studentId,
-      name,
-      avatar,
-    };
-    if (currentRoom) {
-      const valuesToBeUpdated = {
-        roomId,
-        messages,
-        updatedAt: new Date().toISOString(),
-        lastMessage: messages[0].text,
+  const onSend = useCallback(
+    (messages: any = []) => {
+      const roomId = `${studentId}**admin`;
+      const user = {
+        id: studentId,
+        name,
+        avatar,
       };
-      // Update messages
-      dispatch(updateMessages(valuesToBeUpdated));
-    } else {
-      const room: RoomType = {
-        roomId,
-        user,
-        messages,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        lastMessage: messages[0].text,
-      };
-      // Create new room
-      dispatch(addRoom(room));
-    }
-    setChat((prevState: any) => GiftedChat.append(prevState, messages));
-  }, []);
+      if (currentRoom) {
+        const valuesToBeUpdated = {
+          roomId,
+          messages,
+          updatedAt: new Date().toISOString(),
+          lastMessage: messages[0].text,
+        };
+        // Update messages
+        dispatch(updateMessages(valuesToBeUpdated));
+      } else {
+        const room: RoomType = {
+          roomId,
+          user,
+          messages,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          lastMessage: messages[0].text,
+        };
+        // Create new room
+        dispatch(addRoom(room));
+        dispatch(setActiveRoom(studentId));
+      }
+      setChat((prevState: any) => GiftedChat.append(prevState, messages));
+    },
+    [currentRoom],
+  );
 
   return (
     <GiftedChat
