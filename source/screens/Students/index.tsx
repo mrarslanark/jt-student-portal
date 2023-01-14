@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, Image, TextInput, View} from 'react-native';
 
 import Divider from '../../components/Divider';
@@ -9,10 +9,17 @@ import {StudentsProps} from '../../navigator/StudentNavigator';
 import styles from './styles';
 
 const Students: React.FC<StudentsProps> = ({navigation}) => {
-  const [dataSource, setDataSource] = useState<StudentItemType[]>(students);
-  const [filteredDataSource, setFilteredDataSource] =
-    useState<StudentItemType[]>(students);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredDataSource, setFilteredDataSource] = useState<
+    StudentItemType[]
+  >([]);
   const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    const range =
+      currentPage * 20 > students.length ? students.length : currentPage * 20;
+    setFilteredDataSource(students.slice(0, range));
+  }, [currentPage]);
 
   const handleNavigation = (id: string) => {
     navigation.navigate('StudentDetail', {id});
@@ -20,7 +27,7 @@ const Students: React.FC<StudentsProps> = ({navigation}) => {
 
   const searchFilter = (text: string) => {
     if (text) {
-      const newData = dataSource.filter(item => {
+      const newData = students.filter(item => {
         const {first_name, last_name, class_id, roll_no} = item;
         const firstName = first_name
           ? first_name.toLowerCase()
@@ -39,7 +46,7 @@ const Students: React.FC<StudentsProps> = ({navigation}) => {
       setFilteredDataSource(newData);
       setSearchText(text);
     } else {
-      setFilteredDataSource(dataSource);
+      setFilteredDataSource(students);
       setSearchText(text);
     }
   };
@@ -61,6 +68,8 @@ const Students: React.FC<StudentsProps> = ({navigation}) => {
       <FlatList
         data={filteredDataSource}
         contentContainerStyle={styles.contentContainerStyle}
+        onEndReached={() => setCurrentPage(prevState => prevState + 1)}
+        onEndReachedThreshold={0.5}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={Divider}
         renderItem={({item}) => {

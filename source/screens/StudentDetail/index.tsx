@@ -14,8 +14,12 @@ import students from '../../constants/students.json';
 import {StudentItemType} from '../../components/StudentItem';
 import Divider from '../../components/Divider';
 import moment from 'moment';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '../../store';
+import {setActiveRoom} from '../../store/slices/chats';
 
 const StudentDetail: React.FC<StudentDetailProps> = ({navigation, route}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [studentInfo, setStudentInfo] = useState<StudentItemType | null>(null);
   const [studentStatus, setStudentStatus] = useState<boolean | null>(null);
   const {id} = route.params;
@@ -47,6 +51,7 @@ const StudentDetail: React.FC<StudentDetailProps> = ({navigation, route}) => {
   };
 
   const handleNavigation = () => {
+    dispatch(setActiveRoom(studentInfo.id));
     navigation.navigate('ChatDetail', {
       studentId: studentInfo.id,
       name: `${studentInfo.first_name} ${studentInfo.last_name}`,

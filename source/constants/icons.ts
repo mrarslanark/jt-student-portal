@@ -8,4 +8,5 @@ export const Icons = {
   Active: require(`${PATH}/active.png`),
   Disabled: require(`${PATH}/disabled.png`),
   Search: require(`${PATH}/search.png`),
+  Back: require(`${PATH}/back.png`),
 };
